@@ -1,0 +1,10 @@
+// Shows a full perspective on the files that got created and executed
+DeviceFileEvents
+| where Timestamp > ago(15d)
+| project DeviceId, DeviceName, FileName, SHA1, FolderPath
+| join kind= inner (
+	DeviceEvents
+	| where Timestamp > ago(15d)
+    | where FileName !in~ ("ossec-agent.exe", "osk.exe")
+	| project DeviceId, DeviceName, FileName, SHA1, FolderPath
+) on DeviceId, DeviceName, SHA1, FolderPath, FileName

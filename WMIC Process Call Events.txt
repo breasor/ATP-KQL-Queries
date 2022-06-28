@@ -1,0 +1,7 @@
+// Finds WMIC process call create events.
+DeviceProcessEvents  
+| where Timestamp < ago(7d)
+| where ProcessCommandLine has "WMIC"
+        and ProcessCommandLine has "process call create"
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| top 100 by Timestamp

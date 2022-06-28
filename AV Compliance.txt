@@ -1,0 +1,10 @@
+let TVMConfigAssessKB = DeviceTvmSecureConfigurationAssessmentKB 
+    | where ConfigurationSubcategory == 'Antivirus'; 
+DeviceTvmSecureConfigurationAssessment 
+| where ConfigurationSubcategory == 'Antivirus' 
+| where OSPlatform startswith "Windows"
+| project DeviceName, IsCompliant, ConfigurationSubcategory, ConfigurationId, ConfigurationImpact, Timestamp , OSPlatform
+| join kind= inner TVMConfigAssessKB on ConfigurationId 
+| project DeviceName, IsCompliant, ConfigurationId, ConfigurationSubcategory, ConfigurationName , OSPlatform
+| distinct DeviceName, IsCompliant, ConfigurationId, ConfigurationSubcategory, ConfigurationName , OSPlatform
+| sort by DeviceName asc
